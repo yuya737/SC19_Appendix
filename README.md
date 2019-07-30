@@ -41,7 +41,7 @@ All code was run on SUMMIT supercomputer at Oak Ridge National Laboratory, TN
 ## Execution instructions
 
 To run the OpenMP version, for example,
-`clippingOMP 400 400 10000 30` would specify a transversial clipping of a dataset of x_size=400 y_size=400 z_size=10000 for 30 iterations.
+`clippingOMP 400 400 10000 30` would specify a transversial clipping of a dataset of, x_size=400, y_size=400, z_size=10000 for 30 iterations.
 
 
 
