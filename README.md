@@ -1,5 +1,13 @@
 # SC19_Archive
 
+## Prerequisites
+- RAPIDS memory manager https://github.com/rapidsai/rmm
+- NVIDIA Thrust https://github.com/thrust/thrust
+- Intel TBB (Thread Building Blocks) https://www.threadingbuildingblocks.org/
+- GNU C/C++ compiler
+
+All code was run on SUMMIT supercomputer at Oak Ridge National Laboratory, TN
+
 ## Compilation instructions
 
 - OpenMP
