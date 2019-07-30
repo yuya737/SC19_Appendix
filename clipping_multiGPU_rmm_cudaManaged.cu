@@ -28,10 +28,12 @@ cTimer timer;
 
 typedef rmm::device_vector<float>::iterator IterFloat;
 typedef rmm::device_vector<int>::iterator IterInt;
+// typedef thrust::device_vector<float>::iterator IterFloat;
+// typedef thrust::device_vector<int>::iterator IterInt;
 
 #define MB (1024*1024)
-#define gpuErrchk(ans) { gpuAssert((ans), __FILE__, __LINE__); }
 
+#define gpuErrchk(ans) { gpuAssert((ans), __FILE__, __LINE__); }
 inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort=true)
 {
    if (code != cudaSuccess) 
@@ -161,7 +163,7 @@ int main(int argc, char *argv[])
 	std::cout << "Num. Devices " << deviceCount << std::endl;
 	std::cout << "Particles per device " << numParticlesPerThread << std::endl;
 	std::cout << "Size MB per device " << (sizeof(float) * numParticlesPerThread * 4.0) / MB <<std::endl;
-
+	
 	// Define array of vectors and threads to be used 
     std::thread thread[numStreams];
 	std::vector <float> pos[numStreams];
@@ -175,9 +177,9 @@ int main(int argc, char *argv[])
 	// PoolAllocation
 	// CudaManagedMemory
 
-	rmmOptions_t options{rmmAllocationMode_t::CudaDefaultAllocation, 0, true};
+	rmmOptions_t options{rmmAllocationMode_t::CudaManagedMemory, 0, true};
 	rmmInitialize(&options);
-	
+
 	// Timer to record time taken to initialize dataset
 	timer.reset();
 
@@ -193,7 +195,6 @@ int main(int argc, char *argv[])
 		thread[i].join ();
 	}
 	std::cout << "in " << timer.getElapsedMilliseconds() << " ms\n";
-
 
 	for(j=0;j<iter;j++)
 	{
