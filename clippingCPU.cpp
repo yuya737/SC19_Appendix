@@ -27,13 +27,25 @@ cTimer timer;
 typedef std::vector<float>::iterator IterFloat;
 typedef std::vector<int>::iterator IterInt;
 
+/**
+    Clips the input vector given the input-defined plane and copy the output to posOut
+
+	@param 
+		posIn: input vector to be clipped
+		normal: normal of the plane with which posIn will be clipped
+		d: the point along with the nomral with which posIn will be clipped
+		posOut: output vector from the clipping
+		size: size of the posIn vector
+		threadId: thread id with which clipping will be ran
+*/
+
 void  clip (std::vector<float> *posIn, float *normal, float d, float* &posOut, size_t size, size_t *sizeOut, int threadId)
 {
 	plane_clippingPDB clipPDB	(normal, d);
 
 	std::vector<int> clipFlag	( size, -1  ); // num vertices
 
-
+	// Define the iterators on posIn
 	strided_range<IterFloat> X			( posIn->begin()  , posIn->end(), 4);
 	strided_range<IterFloat> Y			( posIn->begin()+1, posIn->end(), 4);
 	strided_range<IterFloat> Z			( posIn->begin()+2, posIn->end(), 4);
@@ -44,6 +56,7 @@ void  clip (std::vector<float> *posIn, float *normal, float d, float* &posOut, s
 	strided_range<IterInt> clipZ	( clipFlag.begin()+2, clipFlag.end(), 4);
 	strided_range<IterInt> clipW	( clipFlag.begin()+3, clipFlag.end(), 4);
 
+	// Apply clipPDB of each element of tuples defined using the iterators
 	thrust::for_each ( thrust::make_zip_iterator ( thrust::make_tuple( X.begin(), Y.begin(), Z.begin(), W.begin(),
 																	   clipX.begin(), clipY.begin(), clipZ.begin (), clipW.begin() ) ),
 					   thrust::make_zip_iterator ( thrust::make_tuple( X.end(), Y.end(), Z.end(), W.end(),
@@ -51,14 +64,12 @@ void  clip (std::vector<float> *posIn, float *normal, float d, float* &posOut, s
 					   clipPDB
 					  );
 
+	// Resize the posOut vector to the correct size and copy the information to posOut
 	size_t numNotClipped = thrust::count_if(clipX.begin(), clipX.end(), not_clipped<float>());
 	*sizeOut = numNotClipped;
 	size_t size4 = numNotClipped * 4;
 
-	//std::cout << "not clipped " << *sizeOut << std::endl;
-
     posOut = new float[size4];
-
     thrust::copy_if( posIn->begin(), posIn->end(), clipFlag.begin(), posOut, not_clipped<float>());
 }
 
@@ -96,11 +107,11 @@ int main (int argc, char *argv[])
 	std::cout << "Iterations: " << iter << std::endl;
 	std::cout << "Generating particles...\n";
 
+	// Timer to record time taken to initialize dataset
 	timer.reset ();
 	initDataset(&pos, sx, sy, sz);
 	std::cout << timer.getElapsedMilliseconds() << " ms\n";
 	std::cout << "done!\n";
-
 	timer.reset ();
 
 	// plane defined by normal and D

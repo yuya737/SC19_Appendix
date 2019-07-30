@@ -37,7 +37,7 @@ typedef rmm::device_vector<int>::iterator IterInt;
 		posIn: input vector to be clipped
 		normal: normal of the plane with which posIn will be clipped
 		d: the point along with the nomral with which posIn will be clipped
-		posOut: 
+		posOut: output vector from the clipping
 		size: size of the posIn vector
 		threadId: thread id with which clipping will be ran
 */
@@ -127,9 +127,7 @@ int main (int argc, char *argv[])
 	initDataset(&pos, sx, sy, sz);
 	std::cout << timer.getElapsedMilliseconds() << " ms\n";
 	std::cout << "done!\n";
-
 	timer.reset ();
-
 
 	// plane defined by normal and D
 	float normal[3], d = 0.0f;
