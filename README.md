@@ -1,10 +1,13 @@
-# SC19_Archive
+# SC19_Appendix
 
 ## Prerequisites
 - RAPIDS memory manager https://github.com/rapidsai/rmm
 - NVIDIA Thrust https://github.com/thrust/thrust
 - Intel TBB (Thread Building Blocks) https://www.threadingbuildingblocks.org/
-- GNU C/C++ compiler
+- GNU C/C++ compiler v6.x+
+- CUDA 10.0+
+
+NVIDIA Driver Version: 418.67
 
 All code was run on SUMMIT supercomputer at Oak Ridge National Laboratory, TN
 
@@ -34,6 +37,12 @@ All code was run on SUMMIT supercomputer at Oak Ridge National Laboratory, TN
 
 - Multi GPU - CudaManaged
   - `nvcc --default-stream per-thread  -O3 -std=c++11  -o clipping_multiGPU_rmm_cudaManaged  clipping_multiGPU_rmm_cudaManaged.cu -lrmm -I<path-to-rmm-headers> -gencode arch=compute_70,code=sm_70`
+  
+## Execution instructions
+
+To run the OpenMP version, for example,
+`clippingOMP 400 400 10000 30` would specify a transversial clipping of a dataset of x_size=400 y_size=400 z_size=10000 for 30 iterations.
+
 
 
 
